@@ -1,67 +1,124 @@
 import { useState } from "react";
 
-function ProductCard({ product, onSelect, onAddToCart }) {
-  const [favorite, setFavorite] = useState(false);
+function ProductCard({
+  product,
+  onSelect,
+  onAddToCart,
+}) {
+  const [added, setAdded] =
+    useState(false);
+
+  const stock =
+    Number(product.stock) || 0;
+
+  const handleAdd = (event) => {
+    event.stopPropagation();
+
+    if (stock <= 0) return;
+
+    onAddToCart(product, 1);
+
+    setAdded(true);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 1200);
+  };
 
   return (
     <article
       className="product-card"
-      style={{ "--product-color": product.color }}
+      style={{
+        "--product-color":
+          product.color ||
+          "#ff167d",
+      }}
     >
-      <div className="product-image-wrapper" onClick={() => onSelect(product)}>
+      <div
+        className="product-image-wrapper"
+        onClick={() =>
+          onSelect(product)
+        }
+      >
         <img
+          className="product-image"
           src={product.image}
           alt={product.name}
-          className="product-image"
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src =
-              "https://loremflickr.com/900/900/boardgame?lock=999";
+          onError={(event) => {
+            event.currentTarget.src =
+              "https://loremflickr.com/800/800/dice?lock=999";
           }}
         />
 
-        <span className="product-badge">{product.badge}</span>
+        <div className="image-shine" />
+
+        {product.badge && (
+          <span className="product-badge">
+            {product.badge}
+          </span>
+        )}
 
         <button
-          className={`favorite-button ${favorite ? "active" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setFavorite(!favorite);
-          }}
-          aria-label="Agregar a favoritos"
+          type="button"
+          className="favorite-button"
+          onClick={(event) =>
+            event.stopPropagation()
+          }
+          aria-label="Favorito"
         >
-          {favorite ? "♥" : "♡"}
+          ♡
         </button>
 
         <div className="image-overlay">
-          <span>Ver producto</span>
+          <span>
+            Ver producto
+          </span>
         </div>
       </div>
 
       <div className="product-content">
-        <div className="product-category">{product.category}</div>
+        <span className="product-category">
+          {product.category}
+        </span>
 
         <h3>{product.name}</h3>
 
-        <p>{product.description}</p>
+        <p>
+          {product.description}
+        </p>
 
         <div className="product-footer">
-          <div>
-            <strong>${product.price}</strong>
-            <small> MXN</small>
-          </div>
+          <strong>
+            $
+            {Number(
+              product.price
+            ).toLocaleString(
+              "es-MX"
+            )}
+          </strong>
+
+          <small>MXN</small>
 
           <span className="stock">
-            ● {product.stock} disponibles
+            {stock > 0
+              ? `${stock} disponibles`
+              : "Agotado"}
           </span>
         </div>
 
         <button
-          className="add-button"
-          onClick={() => onAddToCart(product)}
+          type="button"
+          className={`add-button ${
+            added ? "added" : ""
+          }`}
+          disabled={stock <= 0}
+          onClick={handleAdd}
         >
-          <span>＋</span>
-          Agregar
+          {stock <= 0
+            ? "Agotado"
+            : added
+            ? "✓ Agregado"
+            : "Agregar al carrito"}
         </button>
       </div>
     </article>

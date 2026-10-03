@@ -1,23 +1,56 @@
-function ProductDetails({ product, quantity, setQuantity, onClose, onAdd }) {
-  if (!product) return null;
+function ProductDetails({
+  product,
+  quantity,
+  setQuantity,
+  onClose,
+  onAdd,
+}) {
+  if (!product) {
+    return null;
+  }
+
+  const stock =
+    Number(product.stock) || 0;
+
+  const total =
+    Number(product.price) *
+    quantity;
 
   const decrease = () => {
-    setQuantity((value) => Math.max(1, value - 1));
-  };
-
-  const increase = () => {
-    setQuantity((value) =>
-      Math.min(product.stock, value + 1)
+    setQuantity(
+      Math.max(1, quantity - 1)
     );
   };
 
+  const increase = () => {
+    setQuantity(
+      Math.min(stock, quantity + 1)
+    );
+  };
+
+  const handleAdd = () => {
+    onAdd(product, quantity);
+    onClose();
+  };
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div
-        className="product-modal"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button className="modal-close" onClick={onClose}>
+    <div
+      className="modal-backdrop"
+      onMouseDown={(event) => {
+        if (
+          event.target ===
+          event.currentTarget
+        ) {
+          onClose();
+        }
+      }}
+    >
+      <div className="product-modal">
+        <button
+          className="modal-close"
+          onClick={onClose}
+          aria-label="Cerrar"
+        >
           ×
         </button>
 
@@ -25,9 +58,9 @@ function ProductDetails({ product, quantity, setQuantity, onClose, onAdd }) {
           <img
             src={product.image}
             alt={product.name}
-            onError={(e) => {
-              e.currentTarget.src =
-                "https://loremflickr.com/900/900/boardgame?lock=999";
+            onError={(event) => {
+              event.currentTarget.src =
+                "https://loremflickr.com/800/800/dice?lock=999";
             }}
           />
         </div>
@@ -40,36 +73,70 @@ function ProductDetails({ product, quantity, setQuantity, onClose, onAdd }) {
           <h2>{product.name}</h2>
 
           <div className="modal-price">
-            ${product.price}
+            $
+            {Number(
+              product.price
+            ).toLocaleString(
+              "es-MX"
+            )}
             <small> MXN</small>
           </div>
 
-          <p>{product.description}</p>
+          <p>
+            {product.description}
+          </p>
 
           <div className="modal-stock">
             <span>●</span>
-            {product.stock} piezas disponibles
+
+            {stock > 0
+              ? `${stock} piezas disponibles`
+              : "Producto agotado"}
           </div>
 
-          <div className="quantity-container">
-            <span>Cantidad</span>
+          {stock > 0 && (
+            <>
+              <div className="quantity-container">
+                <span>
+                  Cantidad
+                </span>
 
-            <div className="quantity-control">
-              <button onClick={decrease}>−</button>
-              <strong>{quantity}</strong>
-              <button onClick={increase}>＋</button>
-            </div>
-          </div>
+                <div className="quantity-control">
+                  <button
+                    onClick={
+                      decrease
+                    }
+                  >
+                    −
+                  </button>
 
-          <button
-            className="modal-cart-button"
-            onClick={() => {
-              onAdd(product, quantity);
-              onClose();
-            }}
-          >
-            🛒 Agregar al carrito
-          </button>
+                  <strong>
+                    {quantity}
+                  </strong>
+
+                  <button
+                    onClick={
+                      increase
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <button
+                className="modal-cart-button"
+                onClick={
+                  handleAdd
+                }
+              >
+                Agregar · $
+                {total.toLocaleString(
+                  "es-MX"
+                )}
+              </button>
+            </>
+          )}
 
           <div className="product-features">
             <div>
@@ -78,18 +145,18 @@ function ProductDetails({ product, quantity, setQuantity, onClose, onAdd }) {
             </div>
 
             <div>
-              <span>◈</span>
-              Alta calidad
-            </div>
-
-            <div>
               <span>✓</span>
-              Stock disponible
+              Calidad premium
             </div>
 
             <div>
-              <span>↗</span>
-              Envíos nacionales
+              <span>3D</span>
+              Acabado especial
+            </div>
+
+            <div>
+              <span>∞</span>
+              Para tus partidas
             </div>
           </div>
         </div>
