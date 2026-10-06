@@ -273,6 +273,7 @@ function Catalog({
                 "Todos",
                 "Dados",
                 "Marcos",
+                "Fichas",
               ].map((item) => (
                 <button
                   key={item}
