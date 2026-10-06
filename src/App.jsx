@@ -354,18 +354,18 @@ function App() {
             Colección
           </Link>
 
-          <Link to="/admin">
+          {/* <Link to="/admin">
             Administración
-          </Link>
+          </Link> */}
         </nav>
 
         <div className="header-actions">
-          <Link
+          {/* <Link
             to="/admin"
             className="header-admin"
           >
             ⚙ <span>Admin</span>
-          </Link>
+          </Link> */}
         </div>
       </header>
 
