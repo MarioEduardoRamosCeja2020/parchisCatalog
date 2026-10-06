@@ -4,8 +4,7 @@ import {
   useState,
 } from "react";
 
-const MAX_IMAGE_SIZE =
-  5 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const emptyProduct = {
   name: "",
@@ -47,21 +46,16 @@ function AdminProductForm({
         ...product,
       });
 
-      setPreview(
-        product.image || ""
-      );
+      setPreview(product.image || "");
     } else {
-      setForm(emptyProduct);
+      setForm({ ...emptyProduct });
       setPreview("");
     }
 
     setErrors({});
   }, [product]);
 
-  const updateField = (
-    field,
-    value
-  ) => {
+  const updateField = (field, value) => {
     setForm((current) => ({
       ...current,
       [field]: value,
@@ -98,12 +92,10 @@ function AdminProductForm({
 
     setUploading(true);
 
-    const reader =
-      new FileReader();
+    const reader = new FileReader();
 
     reader.onload = () => {
-      const result =
-        reader.result;
+      const result = reader.result;
 
       setPreview(result);
 
@@ -123,8 +115,7 @@ function AdminProductForm({
     reader.onerror = () => {
       setErrors((current) => ({
         ...current,
-        image:
-          "No se pudo leer la imagen.",
+        image: "No se pudo leer la imagen.",
       }));
 
       setUploading(false);
@@ -133,11 +124,8 @@ function AdminProductForm({
     reader.readAsDataURL(file);
   };
 
-  const handleFileChange = (
-    event
-  ) => {
-    const file =
-      event.target.files?.[0];
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
 
     handleFile(file);
 
@@ -156,24 +144,15 @@ function AdminProductForm({
   const validate = () => {
     const nextErrors = {};
 
-    if (
-      !form.name.trim()
-    ) {
+    if (!form.name.trim()) {
       nextErrors.name =
         "Escribe el nombre del producto.";
-    }
-
-    if (
-      form.name.trim().length <
-      3
-    ) {
+    } else if (form.name.trim().length < 3) {
       nextErrors.name =
         "El nombre debe tener al menos 3 caracteres.";
     }
 
-    const price = Number(
-      form.price
-    );
+    const price = Number(form.price);
 
     if (
       !form.price ||
@@ -184,9 +163,7 @@ function AdminProductForm({
         "Ingresa un precio válido mayor a 0.";
     }
 
-    const stock = Number(
-      form.stock
-    );
+    const stock = Number(form.stock);
 
     if (
       form.stock === "" ||
@@ -198,9 +175,7 @@ function AdminProductForm({
         "El inventario debe ser un número entero igual o mayor a 0.";
     }
 
-    if (
-      !form.description.trim()
-    ) {
+    if (!form.description.trim()) {
       nextErrors.description =
         "Agrega una descripción.";
     }
@@ -212,39 +187,23 @@ function AdminProductForm({
 
     setErrors(nextErrors);
 
-    return (
-      Object.keys(nextErrors)
-        .length === 0
-    );
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = (
-    event
-  ) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!validate()) {
-      return;
-    }
+    if (!validate()) return;
 
     const productToSave = {
       ...form,
-      id:
-        product?.id ??
-        Date.now(),
+      id: product?.id ?? Date.now(),
       name: form.name.trim(),
-      price: Number(
-        form.price
-      ),
-      stock: Number(
-        form.stock
-      ),
-      description:
-        form.description.trim(),
-      active:
-        Boolean(form.active),
-      featured:
-        Boolean(form.featured),
+      price: Number(form.price),
+      stock: Number(form.stock),
+      description: form.description.trim(),
+      active: Boolean(form.active),
+      featured: Boolean(form.featured),
     };
 
     onSave(productToSave);
@@ -255,12 +214,24 @@ function AdminProductForm({
       className="admin-form"
       onSubmit={handleSubmit}
     >
+      <div className="form-title">
+        <span>✦ PRODUCTO</span>
+
+        <h2>
+          {product
+            ? "Editar producto"
+            : "Nuevo producto"}
+        </h2>
+
+        <p>
+          Completa la información de tu producto.
+        </p>
+      </div>
+
       <div className="admin-form-grid">
         <div className="admin-form-main">
           <div className="form-field">
-            <label>
-              Nombre *
-            </label>
+            <label>Nombre *</label>
 
             <input
               value={form.name}
@@ -282,101 +253,60 @@ function AdminProductForm({
 
           <div className="form-row">
             <div className="form-field">
-              <label>
-                Categoría *
-              </label>
+              <label>Categoría *</label>
 
               <select
-                value={
-                  form.category
-                }
-                onChange={(
-                  event
-                ) =>
+                value={form.category}
+                onChange={(event) =>
                   updateField(
                     "category",
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
               >
-                <option>
-                  Dados
-                </option>
-
-                <option>
-                  Marcos
-                </option>
+                <option>Dados</option>
+                <option>Marcos</option>
+                <option>Fichas</option>
               </select>
             </div>
 
             <div className="form-field">
-              <label>
-                Etiqueta
-              </label>
+              <label>Etiqueta</label>
 
               <select
-                value={
-                  form.badge
-                }
-                onChange={(
-                  event
-                ) =>
+                value={form.badge}
+                onChange={(event) =>
                   updateField(
                     "badge",
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
               >
-                <option>
-                  NUEVO
-                </option>
-
-                <option>
-                  DESTACADO
-                </option>
-
-                <option>
-                  POPULAR
-                </option>
-
-                <option>
-                  ESPECIAL
-                </option>
-
-                <option>
-                  PREMIUM
-                </option>
+                <option>NUEVO</option>
+                <option>DESTACADO</option>
+                <option>POPULAR</option>
+                <option>ESPECIAL</option>
+                <option>PREMIUM</option>
               </select>
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-field">
-              <label>
-                Precio *
-              </label>
+              <label>Precio *</label>
 
               <div className="input-with-prefix">
-                <span>
-                  $
-                </span>
+                <span>$</span>
 
                 <input
                   type="number"
                   min="1"
                   step="1"
-                  value={
-                    form.price
-                  }
-                  onChange={(
-                    event
-                  ) =>
+                  value={form.price}
+                  onChange={(event) =>
                     updateField(
                       "price",
-                      event.target
-                        .value
+                      event.target.value
                     )
                   }
                   placeholder="95"
@@ -391,24 +321,17 @@ function AdminProductForm({
             </div>
 
             <div className="form-field">
-              <label>
-                Stock *
-              </label>
+              <label>Stock *</label>
 
               <input
                 type="number"
                 min="0"
                 step="1"
-                value={
-                  form.stock
-                }
-                onChange={(
-                  event
-                ) =>
+                value={form.stock}
+                onChange={(event) =>
                   updateField(
                     "stock",
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
                 placeholder="20"
@@ -423,20 +346,15 @@ function AdminProductForm({
           </div>
 
           <div className="form-field">
-            <label>
-              Descripción *
-            </label>
+            <label>Descripción *</label>
 
             <textarea
               rows="5"
-              value={
-                form.description
-              }
+              value={form.description}
               onChange={(event) =>
                 updateField(
                   "description",
-                  event.target
-                    .value
+                  event.target.value
                 )
               }
               placeholder="Describe el producto..."
@@ -444,36 +362,27 @@ function AdminProductForm({
 
             {errors.description && (
               <small className="form-error">
-                {
-                  errors.description
-                }
+                {errors.description}
               </small>
             )}
           </div>
 
           <div className="form-field">
-            <label>
-              Color del producto
-            </label>
+            <label>Color del producto</label>
 
             <div className="color-picker-row">
               <input
                 type="color"
-                value={
-                  form.color
-                }
+                value={form.color}
                 onChange={(event) =>
                   updateField(
                     "color",
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
               />
 
-              <span>
-                {form.color}
-              </span>
+              <span>{form.color}</span>
             </div>
           </div>
 
@@ -481,14 +390,11 @@ function AdminProductForm({
             <label>
               <input
                 type="checkbox"
-                checked={
-                  form.active
-                }
+                checked={form.active}
                 onChange={(event) =>
                   updateField(
                     "active",
-                    event.target
-                      .checked
+                    event.target.checked
                   )
                 }
               />
@@ -501,14 +407,11 @@ function AdminProductForm({
             <label>
               <input
                 type="checkbox"
-                checked={
-                  form.featured
-                }
+                checked={form.featured}
                 onChange={(event) =>
                   updateField(
                     "featured",
-                    event.target
-                      .checked
+                    event.target.checked
                   )
                 }
               />
@@ -521,19 +424,13 @@ function AdminProductForm({
         </div>
 
         <div className="admin-form-image">
-          <label>
-            Imagen del producto *
-          </label>
+          <label>Imagen del producto *</label>
 
           <div
             className={`image-upload ${
-              errors.image
-                ? "has-error"
-                : ""
+              errors.image ? "has-error" : ""
             }`}
-            onDragOver={(
-              event
-            ) =>
+            onDragOver={(event) =>
               event.preventDefault()
             }
             onDrop={handleDrop}
@@ -542,28 +439,30 @@ function AdminProductForm({
             }
           >
             {preview ? (
-              <img
-                src={preview}
-                alt="Vista previa"
-              />
+              <>
+                <img
+                  src={preview}
+                  alt="Vista previa"
+                />
+
+                <div className="change-image-label">
+                  ✦ Cambiar imagen
+                </div>
+              </>
             ) : (
               <div className="upload-placeholder">
-                <span>
-                  ✦
-                </span>
+                <span>✦</span>
 
                 <strong>
                   Sube una imagen
                 </strong>
 
                 <small>
-                  Toca aquí o
-                  arrastra una imagen
+                  Toca aquí o arrastra una imagen
                 </small>
 
                 <small>
-                  PNG, JPG, WEBP ·
-                  máximo 5 MB
+                  PNG, JPG, WEBP · máximo 5 MB
                 </small>
               </div>
             )}
@@ -573,12 +472,6 @@ function AdminProductForm({
                 Procesando...
               </div>
             )}
-
-            {preview && (
-              <div className="change-image-label">
-                Cambiar imagen
-              </div>
-            )}
           </div>
 
           <input
@@ -586,9 +479,7 @@ function AdminProductForm({
             type="file"
             accept="image/png,image/jpeg,image/webp,image/gif"
             hidden
-            onChange={
-              handleFileChange
-            }
+            onChange={handleFileChange}
           />
 
           {errors.image && (
@@ -598,13 +489,9 @@ function AdminProductForm({
           )}
 
           <p className="upload-help">
-            Desde PC puedes
-            seleccionar el archivo
-            normalmente. En celular
-            podrás elegir una foto
-            desde la galería o tomar
-            una fotografía, según el
-            navegador.
+            Desde PC puedes seleccionar el archivo
+            normalmente. En celular podrás elegir una
+            foto desde la galería o tomar una fotografía.
           </p>
         </div>
       </div>

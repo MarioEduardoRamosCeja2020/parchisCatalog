@@ -9,23 +9,16 @@ function ProductDetails({
     return null;
   }
 
-  const stock =
-    Number(product.stock) || 0;
+  const stock = Number(product.stock) || 0;
 
-  const total =
-    Number(product.price) *
-    quantity;
+  const total = Number(product.price) * quantity;
 
   const decrease = () => {
-    setQuantity(
-      Math.max(1, quantity - 1)
-    );
+    setQuantity(Math.max(1, quantity - 1));
   };
 
   const increase = () => {
-    setQuantity(
-      Math.min(stock, quantity + 1)
-    );
+    setQuantity(Math.min(stock, quantity + 1));
   };
 
   const handleAdd = () => {
@@ -37,10 +30,7 @@ function ProductDetails({
     <div
       className="modal-backdrop"
       onMouseDown={(event) => {
-        if (
-          event.target ===
-          event.currentTarget
-        ) {
+        if (event.target === event.currentTarget) {
           onClose();
         }
       }}
@@ -54,7 +44,16 @@ function ProductDetails({
           ×
         </button>
 
+        <div className="modal-sparkles">
+          <span>✦</span>
+          <span>✧</span>
+          <span>⋆</span>
+          <span>✦</span>
+        </div>
+
         <div className="modal-image">
+          <div className="modal-image-glow" />
+
           <img
             src={product.image}
             alt={product.name}
@@ -66,28 +65,34 @@ function ProductDetails({
         </div>
 
         <div className="modal-info">
-          <span className="modal-category">
-            {product.category}
-          </span>
+          <div className="modal-topline">
+            <span className="modal-category">
+              {product.category}
+            </span>
+
+            {product.badge && (
+              <span className="modal-badge">
+                ✦ {product.badge}
+              </span>
+            )}
+          </div>
 
           <h2>{product.name}</h2>
 
           <div className="modal-price">
             $
-            {Number(
-              product.price
-            ).toLocaleString(
+            {Number(product.price).toLocaleString(
               "es-MX"
             )}
             <small> MXN</small>
           </div>
 
-          <p>
-            {product.description}
-          </p>
+          <p>{product.description}</p>
 
           <div className="modal-stock">
-            <span>●</span>
+            <span className={stock > 0 ? "online" : ""}>
+              ●
+            </span>
 
             {stock > 0
               ? `${stock} piezas disponibles`
@@ -97,28 +102,16 @@ function ProductDetails({
           {stock > 0 && (
             <>
               <div className="quantity-container">
-                <span>
-                  Cantidad
-                </span>
+                <span>Cantidad</span>
 
                 <div className="quantity-control">
-                  <button
-                    onClick={
-                      decrease
-                    }
-                  >
+                  <button onClick={decrease}>
                     −
                   </button>
 
-                  <strong>
-                    {quantity}
-                  </strong>
+                  <strong>{quantity}</strong>
 
-                  <button
-                    onClick={
-                      increase
-                    }
-                  >
+                  <button onClick={increase}>
                     +
                   </button>
                 </div>
@@ -126,14 +119,13 @@ function ProductDetails({
 
               <button
                 className="modal-cart-button"
-                onClick={
-                  handleAdd
-                }
+                onClick={handleAdd}
               >
-                Agregar · $
-                {total.toLocaleString(
-                  "es-MX"
-                )}
+                <span>Agregar al carrito</span>
+
+                <strong>
+                  ${total.toLocaleString("es-MX")}
+                </strong>
               </button>
             </>
           )}

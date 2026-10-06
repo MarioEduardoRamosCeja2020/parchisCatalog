@@ -1,22 +1,134 @@
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
+:root {
+  font-family: "Inter", sans-serif;
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+  --pink: #ff1680;
+  --pink-light: #ff5ca8;
+  --pink-soft: #ffb8d9;
 
-    <title>Parchís 3D</title>
-  </head>
+  --purple: #8b5cf6;
+  --purple-dark: #5b21b6;
 
-  <body>
-    <div id="root"></div>
+  --bg: #08070d;
+  --bg-soft: #100d18;
 
-    <script
-      type="module"
-      src="/src/main.jsx"
-    ></script>
-  </body>
-</html>
+  --surface: #15111f;
+  --surface-2: #1c1628;
+
+  --white: #ffffff;
+  --text: #f8f5fb;
+  --text-soft: #bdb6c9;
+  --muted: #81788f;
+
+  --border: rgba(255, 255, 255, 0.09);
+
+  --pink-glow:
+    0 0 12px rgba(255, 22, 128, 0.35),
+    0 0 35px rgba(255, 22, 128, 0.12);
+
+  --purple-glow:
+    0 0 20px rgba(139, 92, 246, 0.3);
+
+  --radius: 22px;
+  --radius-small: 14px;
+  --transition: 0.25s ease;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  color: var(--text);
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(255, 22, 128, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(139, 92, 246, 0.1),
+      transparent 30%
+    ),
+    var(--bg);
+
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  font-family: "Poppins", sans-serif;
+}
+
+p {
+  line-height: 1.7;
+}
+
+::selection {
+  color: #fff;
+  background: var(--pink);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: linear-gradient(
+    var(--pink),
+    var(--purple)
+  );
+}

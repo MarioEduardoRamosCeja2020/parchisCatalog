@@ -8,18 +8,14 @@ function AdminProductTable({
   if (products.length === 0) {
     return (
       <div className="admin-empty">
-        <div>
+        <div className="admin-empty-icon">
           ✦
         </div>
 
-        <h3>
-          Todavía no tienes
-          productos
-        </h3>
+        <h3>Todavía no tienes productos</h3>
 
         <p>
-          Crea tu primer producto
-          para comenzar.
+          Crea tu primer producto para comenzar.
         </p>
       </div>
     );
@@ -30,120 +26,86 @@ function AdminProductTable({
       <table className="admin-table">
         <thead>
           <tr>
-            <th>
-              Producto
-            </th>
-
-            <th>
-              Categoría
-            </th>
-
-            <th>
-              Precio
-            </th>
-
-            <th>
-              Stock
-            </th>
-
-            <th>
-              Estado
-            </th>
-
-            <th>
-              Acciones
-            </th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
         <tbody>
-          {products.map(
-            (product) => (
-              <tr
-                key={
-                  product.id
-                }
-              >
+          {products.map((product) => {
+            const stock = Number(product.stock) || 0;
+
+            return (
+              <tr key={product.id}>
                 <td>
                   <div className="admin-product-cell">
-                    <img
-                      src={
-                        product.image
-                      }
-                      alt={
-                        product.name
-                      }
-                      onError={(
-                        event
-                      ) => {
-                        event.currentTarget.src =
-                          "https://loremflickr.com/200/200/dice?lock=999";
-                      }}
-                    />
+                    <div className="admin-product-image">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        onError={(event) => {
+                          event.currentTarget.src =
+                            "https://loremflickr.com/200/200/dice?lock=999";
+                        }}
+                      />
+                    </div>
 
                     <div>
-                      <strong>
-                        {
-                          product.name
-                        }
-                      </strong>
+                      <strong>{product.name}</strong>
 
                       <span>
-                        {
-                          product.badge
-                        }
+                        {product.badge || "PRODUCTO"}
                       </span>
                     </div>
                   </div>
                 </td>
 
                 <td>
-                  {
-                    product.category
-                  }
+                  <span className="category-pill">
+                    {product.category}
+                  </span>
                 </td>
 
                 <td>
-                  $
-                  {Number(
-                    product.price
-                  ).toLocaleString(
-                    "es-MX"
-                  )}
+                  <strong className="admin-price">
+                    $
+                    {Number(
+                      product.price
+                    ).toLocaleString("es-MX")}
+                  </strong>
                 </td>
 
                 <td>
                   <span
                     className={
-                      Number(
-                        product.stock
-                      ) <= 3
+                      stock <= 3
                         ? "stock-low"
-                        : ""
+                        : "stock-good"
                     }
                   >
-                    {
-                      product.stock
-                    }
+                    {stock}
                   </span>
                 </td>
 
                 <td>
                   <button
+                    type="button"
                     className={`status-pill ${
-                      product.active !==
-                      false
+                      product.active !== false
                         ? "active"
                         : "inactive"
                     }`}
                     onClick={() =>
-                      onToggle(
-                        product.id
-                      )
+                      onToggle(product.id)
                     }
                   >
-                    {product.active !==
-                    false
+                    <span>●</span>
+
+                    {product.active !== false
                       ? "Activo"
                       : "Oculto"}
                   </button>
@@ -152,6 +114,7 @@ function AdminProductTable({
                 <td>
                   <div className="admin-actions">
                     <button
+                      type="button"
                       title="Destacado"
                       className={
                         product.featured
@@ -159,31 +122,27 @@ function AdminProductTable({
                           : "star-action"
                       }
                       onClick={() =>
-                        onToggleFeatured(
-                          product.id
-                        )
+                        onToggleFeatured(product.id)
                       }
                     >
                       ★
                     </button>
 
                     <button
+                      type="button"
                       className="edit-action"
                       onClick={() =>
-                        onEdit(
-                          product
-                        )
+                        onEdit(product)
                       }
                     >
                       Editar
                     </button>
 
                     <button
+                      type="button"
                       className="delete-action"
                       onClick={() =>
-                        onDelete(
-                          product.id
-                        )
+                        onDelete(product.id)
                       }
                     >
                       Eliminar
@@ -191,8 +150,8 @@ function AdminProductTable({
                   </div>
                 </td>
               </tr>
-            )
-          )}
+            );
+          })}
         </tbody>
       </table>
     </div>

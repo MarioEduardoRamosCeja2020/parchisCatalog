@@ -3,6 +3,8 @@ function AdminPanel({
   onNew,
   onEdit,
   onDelete,
+  onToggle,
+  onToggleFeatured,
 }) {
   const totalProducts = products.length;
 
@@ -18,37 +20,19 @@ function AdminPanel({
 
   return (
     <section className="admin-panel">
-      <div className="admin-stats">
-        <div className="admin-stat-card">
-          <span>PRODUCTOS</span>
-          <strong>{totalProducts}</strong>
-          <small>En catálogo</small>
-        </div>
-
-        <div className="admin-stat-card">
-          <span>INVENTARIO</span>
-          <strong>{totalStock}</strong>
-          <small>Piezas disponibles</small>
-        </div>
-
-        <div className="admin-stat-card">
-          <span>DESTACADOS</span>
-          <strong>{featuredProducts}</strong>
-          <small>Productos destacados</small>
-        </div>
-      </div>
-
-      <div className="admin-toolbar">
+      <div className="admin-panel-header">
         <div>
           <span className="admin-eyebrow">
-            ADMINISTRACIÓN
+            ✦ ADMINISTRACIÓN
           </span>
 
-          <h2>Productos</h2>
+          <h1>
+            Tu catálogo
+            <span>♥</span>
+          </h1>
 
           <p>
-            Administra los dados y marcos del
-            catálogo.
+            Administra tus dados, marcos y productos.
           </p>
         </div>
 
@@ -57,87 +41,64 @@ function AdminPanel({
           className="admin-primary-button"
           onClick={onNew}
         >
-          ＋ Nuevo producto
+          <span>＋</span>
+          Nuevo producto
         </button>
       </div>
 
+      <div className="admin-stats">
+        <div className="admin-stat-card pink">
+          <div className="stat-icon">✦</div>
+
+          <span>PRODUCTOS</span>
+
+          <strong>{totalProducts}</strong>
+
+          <small>En catálogo</small>
+        </div>
+
+        <div className="admin-stat-card purple">
+          <div className="stat-icon">◈</div>
+
+          <span>INVENTARIO</span>
+
+          <strong>{totalStock}</strong>
+
+          <small>Piezas disponibles</small>
+        </div>
+
+        <div className="admin-stat-card gold">
+          <div className="stat-icon">★</div>
+
+          <span>DESTACADOS</span>
+
+          <strong>{featuredProducts}</strong>
+
+          <small>Productos destacados</small>
+        </div>
+      </div>
+
       <div className="admin-table-section">
-        <AdminTableWrapper
+        <div className="admin-section-heading">
+          <div>
+            <span>CATÁLOGO</span>
+            <h2>Productos</h2>
+          </div>
+
+          <div className="admin-product-count">
+            {totalProducts} productos
+          </div>
+        </div>
+
+        <AdminProductTable
           products={products}
           onEdit={onEdit}
           onDelete={onDelete}
+          onToggle={onToggle}
+          onToggleFeatured={onToggleFeatured}
         />
       </div>
     </section>
-  );
-}
-
-function AdminTableWrapper({
-  products,
-  onEdit,
-  onDelete,
-}) {
-  // Importación local para mantener el componente
-  // sencillo y evitar dependencias innecesarias.
-  return (
-    <div className="admin-table-container">
-      {products.length === 0 ? (
-        <div className="admin-empty">
-          <div>✦</div>
-          <h3>Tu catálogo está vacío</h3>
-          <p>
-            Comienza agregando tu primer producto.
-          </p>
-        </div>
-      ) : (
-        <div className="admin-simple-list">
-          {products.map((product) => (
-            <div
-              className="admin-list-row"
-              key={product.id}
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                onError={(event) => {
-                  event.currentTarget.src =
-                    "https://loremflickr.com/200/200/dice?lock=999";
-                }}
-              />
-
-              <div className="admin-list-info">
-                <strong>{product.name}</strong>
-
-                <span>
-                  {product.category} · $
-                  {product.price} MXN ·{" "}
-                  {product.stock} disponibles
-                </span>
-              </div>
-
-              <div className="admin-list-actions">
-                <button
-                  type="button"
-                  onClick={() => onEdit(product)}
-                >
-                  Editar
-                </button>
-
-                <button
-                  type="button"
-                  className="delete"
-                  onClick={() =>
-                    onDelete(product.id)
-                  }
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 

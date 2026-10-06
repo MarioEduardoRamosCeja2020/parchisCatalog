@@ -5,11 +5,10 @@ function ProductCard({
   onSelect,
   onAddToCart,
 }) {
-  const [added, setAdded] =
-    useState(false);
+  const [added, setAdded] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
-  const stock =
-    Number(product.stock) || 0;
+  const stock = Number(product.stock) || 0;
 
   const handleAdd = (event) => {
     event.stopPropagation();
@@ -22,24 +21,27 @@ function ProductCard({
 
     setTimeout(() => {
       setAdded(false);
-    }, 1200);
+    }, 1400);
+  };
+
+  const toggleFavorite = (event) => {
+    event.stopPropagation();
+    setFavorite((current) => !current);
   };
 
   return (
     <article
       className="product-card"
       style={{
-        "--product-color":
-          product.color ||
-          "#ff167d",
+        "--product-color": product.color || "#ff167d",
       }}
     >
       <div
         className="product-image-wrapper"
-        onClick={() =>
-          onSelect(product)
-        }
+        onClick={() => onSelect(product)}
       >
+        <div className="product-glow" />
+
         <img
           className="product-image"
           src={product.image}
@@ -52,54 +54,78 @@ function ProductCard({
 
         <div className="image-shine" />
 
+        <div className="floating-stars">
+          <span>✦</span>
+          <span>✧</span>
+          <span>⋆</span>
+        </div>
+
         {product.badge && (
           <span className="product-badge">
+            <span>✦</span>
             {product.badge}
           </span>
         )}
 
         <button
           type="button"
-          className="favorite-button"
-          onClick={(event) =>
-            event.stopPropagation()
+          className={`favorite-button ${
+            favorite ? "is-favorite" : ""
+          }`}
+          onClick={toggleFavorite}
+          aria-label={
+            favorite
+              ? "Quitar de favoritos"
+              : "Agregar a favoritos"
           }
-          aria-label="Favorito"
         >
-          ♡
+          {favorite ? "♥" : "♡"}
         </button>
 
         <div className="image-overlay">
           <span>
             Ver producto
+            <b>→</b>
           </span>
         </div>
       </div>
 
       <div className="product-content">
-        <span className="product-category">
-          {product.category}
-        </span>
+        <div className="product-heading">
+          <span className="product-category">
+            {product.category}
+          </span>
+
+          {product.featured && (
+            <span className="featured-mini">
+              ★ Destacado
+            </span>
+          )}
+        </div>
 
         <h3>{product.name}</h3>
 
-        <p>
-          {product.description}
-        </p>
+        <p>{product.description}</p>
 
         <div className="product-footer">
-          <strong>
-            $
-            {Number(
-              product.price
-            ).toLocaleString(
-              "es-MX"
-            )}
-          </strong>
+          <div className="price-box">
+            <strong>
+              $
+              {Number(product.price).toLocaleString(
+                "es-MX"
+              )}
+            </strong>
 
-          <small>MXN</small>
+            <small>MXN</small>
+          </div>
 
-          <span className="stock">
+          <span
+            className={`stock ${
+              stock <= 3 && stock > 0
+                ? "stock-warning"
+                : ""
+            }`}
+          >
             {stock > 0
               ? `${stock} disponibles`
               : "Agotado"}
@@ -114,11 +140,15 @@ function ProductCard({
           disabled={stock <= 0}
           onClick={handleAdd}
         >
-          {stock <= 0
-            ? "Agotado"
-            : added
-            ? "✓ Agregado"
-            : "Agregar al carrito"}
+          <span>
+            {stock <= 0
+              ? "Agotado"
+              : added
+              ? "✓ Agregado"
+              : "Agregar al carrito"}
+          </span>
+
+          {stock > 0 && !added && <b>+</b>}
         </button>
       </div>
     </article>
