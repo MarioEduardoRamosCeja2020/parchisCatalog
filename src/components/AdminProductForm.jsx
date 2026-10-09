@@ -70,23 +70,26 @@ function AdminProductForm({
   const handleFile = (file) => {
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
       setErrors((current) => ({
         ...current,
-        image:
-          "Selecciona un archivo de imagen válido.",
+        image: "Formato no permitido. Usa JPG, PNG, WEBP o GIF.",
       }));
-
       return;
     }
 
     if (file.size > MAX_IMAGE_SIZE) {
       setErrors((current) => ({
         ...current,
-        image:
-          "La imagen debe pesar menos de 5 MB.",
+        image: "La imagen debe pesar menos de 5 MB.",
       }));
-
       return;
     }
 
@@ -95,20 +98,15 @@ function AdminProductForm({
     const reader = new FileReader();
 
     reader.onload = () => {
-      const result = reader.result;
-
-      setPreview(result);
-
+      setPreview(String(reader.result || ""));
       setForm((current) => ({
         ...current,
-        image: result,
+        image: file,
       }));
-
       setErrors((current) => ({
         ...current,
         image: "",
       }));
-
       setUploading(false);
     };
 
@@ -117,7 +115,6 @@ function AdminProductForm({
         ...current,
         image: "No se pudo leer la imagen.",
       }));
-
       setUploading(false);
     };
 
@@ -193,11 +190,11 @@ function AdminProductForm({
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!validate()) return;
+    if (uploading || !validate()) return;
 
     const productToSave = {
       ...form,
-      id: product?.id ?? Date.now(),
+      ...(product?.id != null ? { id: product.id } : {}),
       name: form.name.trim(),
       price: Number(form.price),
       stock: Number(form.stock),

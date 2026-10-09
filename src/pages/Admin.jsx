@@ -76,14 +76,16 @@ function Admin({
     });
   };
 
-  const handleSave = (
-    product
-  ) => {
-    onSaveProduct(product);
 
+
+const handleSave = async (product) => {
+  const saved = await onSaveProduct(product);
+
+  if (saved) {
     setShowForm(false);
     setEditingProduct(null);
-  };
+  }
+};
 
   return (
     <main className="admin-page">
